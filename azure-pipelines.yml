@@ -21,17 +21,17 @@ steps:
   displayName: 'Build projects'
   inputs:
     command: 'build'
-    projects: '**/DAYA.Cloud.Framework.V2.csproj'
+    projects: '**/*.csproj'
     arguments: '--configuration Release --no-restore'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Pack NuGet packages'
-  inputs:
-    command: 'pack'
-    packagesToPack: '**/DAYA.Cloud.Framework.V2.csproj'
-    configuration: 'Release'
-    outputDir: '$(Build.ArtifactStagingDirectory)'
-    versioningScheme: 'byBuildNumber'
+# - task: DotNetCoreCLI@2
+#   displayName: 'Pack NuGet packages'
+#   inputs:
+#     command: 'pack'
+#     packagesToPack: '**/DAYA.Cloud.Framework.V2.csproj'
+#     configuration: 'Release'
+#     outputDir: '$(Build.ArtifactStagingDirectory)'
+#     versioningScheme: 'byBuildNumber'
 
 - task: NuGetCommand@2
   displayName: 'Push to NuGet.org'
