@@ -4,11 +4,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-
-variables:
-- group: 'DAYANugetOrg'
-
-
 steps:
 - task: UseDotNet@2
   displayName: 'Use .NET SDK'
