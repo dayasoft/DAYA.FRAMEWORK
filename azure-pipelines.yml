@@ -1,0 +1,42 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Restore packages'
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build projects'
+  inputs:
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--configuration Release --no-restore'
+
+# - task: DotNetCoreCLI@2
+#   displayName: 'Pack NuGet packages'
+#   inputs:
+#     command: 'pack'
+#     packagesToPack: '**/DAYA.Cloud.Framework.V2.csproj'
+#     configuration: 'Release'
+#     outputDir: '$(Build.ArtifactStagingDirectory)'
+#     versioningScheme: 'byBuildNumber'
+
+- task: NuGetCommand@2
+  displayName: 'Push to NuGet.org'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'DAYA NUGET ORG'
