@@ -404,6 +404,9 @@ FodyWeavers.xsd
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+# Visual Studio Code settings
+appsettings.Development.json
+
 # Local History for Visual Studio Code
 .history/
 
@@ -416,3 +419,4 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/Example/Daya.Sample.WebAPI/appsettings.Development.json

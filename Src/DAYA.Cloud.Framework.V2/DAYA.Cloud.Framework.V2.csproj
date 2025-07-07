@@ -6,15 +6,11 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.4.3</Version>
-		<AssemblyVersion>8.4.3.0</AssemblyVersion>
-		<FileVersion>8.4.3.0</FileVersion>
+		<Version>8.5.0</Version>
+		<AssemblyVersion>8.5.0.0</AssemblyVersion>
+		<FileVersion>8.5.0.0</FileVersion>
 		<PackageReleaseNotes>
-			8.4.3 Remove wildcard from Search
-			8.4.2 Refactor Fuzzy Search
-			8.4.1 Add AND Logic to Fuzzy Search
-			8.4.0 Add Fuzzy Search To Search Queries
-			8.3.0 Add ServiceBus Message Compression
+			8.5.0 Remove Autofac Dependency
 		</PackageReleaseNotes>
 	</PropertyGroup>
 	<ItemGroup>

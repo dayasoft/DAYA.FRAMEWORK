@@ -8,10 +8,12 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.0.1</Version>
-		<AssemblyVersion>8.0.1.0</AssemblyVersion>
-		<FileVersion>8.0.1.0</FileVersion>
-		<PackageReleaseNotes>8.0.0</PackageReleaseNotes>
+		<Version>8.5.0</Version>
+		<AssemblyVersion>8.5.0.0</AssemblyVersion>
+		<FileVersion>8.5.0.0</FileVersion>
+		<PackageReleaseNotes>
+			8.5.0 Support 
+		</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

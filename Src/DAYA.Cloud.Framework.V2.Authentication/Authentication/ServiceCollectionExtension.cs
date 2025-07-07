@@ -5,6 +5,8 @@ using DAYA.Cloud.Framework.V2.Authentication.Contracts.ApiKeyAuthentication;
 using DAYA.Cloud.Framework.V2.Authentication.Contracts.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
@@ -91,18 +93,32 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
                     .AddJwtBearer(DayaAuthenticationSchemeNames.EntraExternalId, options =>
                     {
                         // Entra External ID uses a specific authority format
-                        options.Authority = $"https://{entraExternalIdConfig.TenantId}.ciamlogin.com/{entraExternalIdConfig.TenantId}/{entraExternalIdConfig.SignUpSignInPolicyId}/v2.0";
+                        options.Authority = $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/{entraExternalIdConfig.SignUpSignInPolicyId}/v2.0";
+                        options.MetadataAddress = $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/v2.0/.well-known/openid-configuration";
+
+                        options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuer = true,
                             ValidateAudience = true,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
+
                             ClockSkew = TimeSpan.FromMinutes(5),
 
                             // Entra External ID specific issuer validation
-                            ValidIssuer = $"https://{entraExternalIdConfig.TenantId}.ciamlogin.com/{entraExternalIdConfig.TenantId}/v2.0",
+                            ValidIssuer = $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/v2.0",
                             ValidAudiences = entraExternalIdConfig.Audiences.Split(","),
+                            IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+                            {
+                                // This will force fetching keys from the JWKS endpoint
+                                var configManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                                    $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/v2.0/.well-known/openid-configuration",
+                                    new OpenIdConnectConfigurationRetriever());
+
+                                var config = configManager.GetConfigurationAsync().Result;
+                                return config.SigningKeys;
+                            },
 
                             // Name claim mapping for Entra External ID
                             NameClaimType = "name",

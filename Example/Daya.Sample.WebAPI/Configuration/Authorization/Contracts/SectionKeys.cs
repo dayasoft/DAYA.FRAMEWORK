@@ -1,4 +1,4 @@
-namespace Puls.Cloud.Services.Account.API.Configuration.Authorization.Contracts;
+namespace Daya.Sample.WebAPI.Configuration.Authorization.Contracts;
 
 public static class SectionKeys
 {

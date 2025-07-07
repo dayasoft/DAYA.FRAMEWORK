@@ -15,6 +15,17 @@ using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+IHostEnvironment environment = builder.Environment;
+
+// Load configuration from appsettings.json
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+if (environment.IsDevelopment())
+{
+    builder.Configuration.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true);
+}
+
+builder.Configuration.AddEnvironmentVariables();
+
 var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
 {
     TenantId = "55a6a626-be1a-4c04-b1ae-767bec31edd5",

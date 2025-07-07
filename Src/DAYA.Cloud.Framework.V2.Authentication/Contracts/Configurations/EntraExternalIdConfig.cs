@@ -8,10 +8,10 @@
 
         public string TenantId { get; set; } = null!;
 
+        public string EntraName { get; set; } = null!;
+
         public string SignUpSignInPolicyId { get; set; } = null!;
 
         public string Audiences { get; set; } = null!;
-
-        //public bool UseFakeAdb2c { get; set; }
     }
 }
