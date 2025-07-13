@@ -27,10 +27,7 @@ internal class QueueMessagePublisher : IQueueMessagePublisher
 
     public async Task PublishAsync(string queue, string sessionId, string raw)
     {
-        _logger.LogInformation("Publishing message to queue");
-        _logger.LogInformation($"Queue: {queue}");
-        _logger.LogInformation($"SessionId: {sessionId}");
-        _logger.LogInformation($"Data: {raw}");
+        _logger.LogInformation($"Publishing message to queue {queue}");
 
         // Convert to bytes
         byte[] data = Encoding.UTF8.GetBytes(raw);

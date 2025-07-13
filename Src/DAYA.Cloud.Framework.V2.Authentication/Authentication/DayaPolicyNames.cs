@@ -5,4 +5,5 @@ public class DayaPolicyNames
     public const string ExternalApp = nameof(ExternalApp);
     public const string Combined = nameof(Combined);
     public const string InternalService = nameof(InternalService);
+    public const string AllowAnonymous = nameof(AllowAnonymous);
 }

@@ -1,18 +1,9 @@
-﻿using DAYA.Cloud.Framework.V2.Application.Contracts;
-using DAYA.Cloud.Framework.V2.EncryptedAzureServiceBus;
-using DAYA.Cloud.Framework.V2.Infrastructure;
-using DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
-using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NetArchTest.Rules;
-using System.Reflection;
 
 namespace DAYA.Cloud.Framework.V2.Cosmos.Migration;
 
@@ -32,48 +23,6 @@ public static class HostingExtensions
 
         return builder;
     }
-
-    //public static IServiceCollection ConfigureCompositionRootForServiceBus<TDbContext>(
-    //    this IServiceCollection serviceCollection,
-    //    IConfiguration configuration,
-    //    Assembly applicationAssembly,
-    //    Assembly infrastructureAssembly,
-    //    ILoggerFactory loggerFactory,
-    //    Action<CompositionRootOptionsBuilder> initializeCompositionRootAction)
-    //where TDbContext : ServiceDbContext
-    //{
-    //    ServiceDatabaseConfig serviceDatabaseConfig = new();
-    //    ServiceBusConfig serviceBusConfig = new();
-    //    configuration.GetSection(ServiceDatabaseConfig.ServiceDatabase).Bind(serviceDatabaseConfig);
-    //    configuration.GetSection(ServiceBusConfig.ServiceBus).Bind(serviceBusConfig);
-
-    // var cosmosDbAccountEndpoint = serviceDatabaseConfig.AccountEndpoint; var cosmosDbAccountKey =
-    // serviceDatabaseConfig.PrimaryKey; var databaseName = serviceDatabaseConfig.DatabaseName;
-
-    // var contextOptionsBuilder = new DbContextOptionsBuilder<TDbContext>(); contextOptionsBuilder
-    // .ReplaceService<IValueConverterSelector, CosmosTypedIdValueConverterSelector>();
-    // contextOptionsBuilder.UseCosmos(cosmosDbAccountEndpoint, cosmosDbAccountKey, databaseName);
-
-    // var compositionRootOptionsBuilder = new CompositionRootOptionsBuilder() .UseMediator(options
-    // => { options.AddAssembly(applicationAssembly); options.AddAssembly(infrastructureAssembly);
-
-    // options.AddType(typeof(IRequestHandler<>)); options.AddType(typeof(IRequestHandler<,>));
-    // options.AddType(typeof(INotificationHandler<>)); options.AddType(typeof(IValidator<>)); })
-    // .UseEfCorePersistance<TDbContext>(options => { options.InfrastructureAssembly =
-    // infrastructureAssembly; options.DbContextOptionsBuilder = contextOptionsBuilder; })
-    // .UseCosmosDatabaseQuery(options => { options.AccountEndpoint = cosmosDbAccountEndpoint;
-    // options.PrimaryKey = cosmosDbAccountKey; options.DbName = databaseName; })
-    // .UseLogging(options => { options.LoggerFactory = loggerFactory; }) .UseCQRS(options => {
-    // options.ApplicationAssebmly = applicationAssembly; }) .UseEncryptedAzureServiceBus(options =>
-    // { options.HexKey = serviceBusConfig.HexKey; options.ConnectionString =
-    // serviceBusConfig.Connection; options.OutboxQueueName = serviceBusConfig.OutboxQueueName;
-    // options.InternalCommandQueueName = serviceBusConfig.InternalCommandQueueName; });
-
-    // initializeCompositionRootAction.Invoke(compositionRootOptionsBuilder);
-    // serviceCollection.AddSingleton<IServiceModule>(new ServiceModule());
-
-    //    return serviceCollection;
-    //}
 
     public static IServiceCollection ConfigureServices(
         this WebApplicationBuilder builder

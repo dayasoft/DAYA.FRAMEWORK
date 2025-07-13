@@ -10,8 +10,6 @@
 
         public string EntraName { get; set; } = null!;
 
-        public string SignUpSignInPolicyId { get; set; } = null!;
-
         public string Audiences { get; set; } = null!;
     }
 }

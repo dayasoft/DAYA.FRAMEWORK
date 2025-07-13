@@ -1,6 +1,9 @@
 using System.Linq;
 using System.Reflection;
 using DAYA.Cloud.Framework.V2.Application.Configuration.Commands;
+using DAYA.Cloud.Framework.V2.Application.Contracts;
+using DAYA.Cloud.Framework.V2.Application.InternalCommands;
+using DAYA.Cloud.Framework.V2.Application.Outbox;
 using DAYA.Cloud.Framework.V2.AzureServiceBus;
 using DAYA.Cloud.Framework.V2.Cosmos;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
@@ -16,6 +19,7 @@ using DAYA.Cloud.Framework.V2.Infrastructure.Processing.CommandPipelines;
 using DAYA.Cloud.Framework.V2.Infrastructure.Processing.QueryPipelines;
 using DAYA.Cloud.Framework.V2.ServiceBus;
 using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
@@ -23,9 +27,16 @@ namespace DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
 public static class ServiceCollectionExtensions
 {    /// <summary>
      /// Registers MediatR services with the .NET Core dependency injection container </summary>
-    public static IServiceCollection AddDayaMediator(this IServiceCollection services, params Assembly[] assemblies)
+    public static IServiceCollection AddDayaMediator(this IServiceCollection services, IConfiguration configuration, Assembly infrastructureAssembly, Assembly applicationAssembly)
     {
+        Assembly[] assemblies = new[]
+        {
+            infrastructureAssembly,
+            applicationAssembly
+        };
+
         RegisterValidations(services, assemblies);
+        services.AddSingleton<IServiceModule, ServiceModule>();
 
         services.AddMediatR(cfg =>
         {
@@ -46,8 +57,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IContainerFactory, ContainerFactory>();
         services.AddScoped<IDirectUnitOfWork, DirectUnitOfWork>();
 
-        services.AddSingleton(new OutboxConfig { Name = "outboxMessages" });
-        services.AddSingleton(new InternalCommandConfig { QueueName = "internalcommandmessage" });
+        var serviceName = configuration.GetValue<string>("ServiceName") ?? "DayaService";
+        var outboxQueueName = $"{serviceName}-outboxmessages".ToLower();
+        var internalCommandMessageQueue = $"{serviceName}-internalcommandmessage".ToLower();
+
+        services.AddSingleton(new OutboxConfig { Name = outboxQueueName });
+        services.AddSingleton(new InternalCommandConfig { QueueName = internalCommandMessageQueue });
 
         services.AddSingleton<IQueueClientFactory, QueueClientFactory>();
         services.AddSingleton<ITopicClientFactory, TopicClientFactory>();
@@ -68,6 +83,12 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IInternalMessageProcessor, InternalMessageProcessor>();
 
         services.AddSingleton<IEventBus, AzureServiceBusEventBus>();
+
+        services.AddSingleton<IApplicationAssemblyResolver>(new ApplicationAssemblyResolver(applicationAssembly));
+
+        // Register background services (outbox messages, internal messages)
+        services.AddHostedService<OutboxMessageBackgroundService>();
+        services.AddHostedService<InternalCommandMessageBackgroundService>();
 
         return services;
     }

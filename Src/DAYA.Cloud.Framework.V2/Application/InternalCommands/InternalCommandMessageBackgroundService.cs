@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -16,10 +17,12 @@ namespace DAYA.Cloud.Framework.V2.Application.InternalCommands
         public InternalCommandMessageBackgroundService(
             ILogger<InternalCommandMessageBackgroundService> logger,
             ServiceBusClient serviceBusClient,
-            IInternalMessageProcessor internalMessageProcessor)
+            IInternalMessageProcessor internalMessageProcessor,
+            IConfiguration configuration)
         {
             _logger = logger;
-            _serviceBusProcessor = serviceBusClient.CreateSessionProcessor("internalcommandmessage", new ServiceBusSessionProcessorOptions
+            var serviceName = configuration.GetValue<string>("ServiceName").ToLower();
+            _serviceBusProcessor = serviceBusClient.CreateSessionProcessor($"{serviceName}-internalcommandmessage", new ServiceBusSessionProcessorOptions
             {
                 AutoCompleteMessages = false,
                 MaxConcurrentSessions = 10, // Number of concurrent sessions to process
@@ -37,19 +40,45 @@ namespace DAYA.Cloud.Framework.V2.Application.InternalCommands
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _serviceBusProcessor.StartProcessingAsync(stoppingToken);
-
             try
             {
-                await Task.Delay(Timeout.Infinite, stoppingToken);
+                _logger.LogInformation("Starting to process messages from the internal command queue");
+                await _serviceBusProcessor.StartProcessingAsync(stoppingToken);
+
+                // Wait until the cancellation token signals shutdown
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // This is expected when stoppingToken is canceled, no need to handle
+                _logger.LogInformation("Processing was canceled as expected during shutdown");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error in ExecuteAsync");
             }
             finally
             {
-                await _serviceBusProcessor.StopProcessingAsync(CancellationToken.None);
+                // Make sure we stop processing on shutdown
+                await SafeStopProcessingAsync();
             }
+        }
 
-            await _serviceBusProcessor.StopProcessingAsync(stoppingToken);
-            await Task.CompletedTask;
+        private async Task SafeStopProcessingAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Stopping the processor...");
+                await _serviceBusProcessor.StopProcessingAsync();
+                _logger.LogInformation("Processor stopped successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error stopping the processor");
+            }
         }
 
         private async Task ProcessInternalMessageAsync(ProcessSessionMessageEventArgs args)
@@ -77,10 +106,17 @@ namespace DAYA.Cloud.Framework.V2.Application.InternalCommands
             return Task.CompletedTask;
         }
 
-        //public override void Dispose()
-        //{
-        //    _processor?.DisposeAsync().GetAwaiter().GetResult();
-        //    base.Dispose();
-        //}
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Stopping background service...");
+            await SafeStopProcessingAsync();
+            await base.StopAsync(cancellationToken);
+        }
+
+        public override void Dispose()
+        {
+            _serviceBusProcessor.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            base.Dispose();
+        }
     }
 }

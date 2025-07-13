@@ -13,7 +13,7 @@ public class ContextAccessor : IContextAccessor
     {
         try
         {
-            return Guid.Parse(FromClaim(DayaClaimTypes.UserId));
+            return Guid.Parse(FromClaim(DayaClaimTypes.UserObjectId));
         }
         catch
         {
@@ -36,12 +36,7 @@ public class ContextAccessor : IContextAccessor
         return FromClaim(DayaClaimTypes.EmailAddress);
     }
 
-    private int UserType()
-    {
-        return int.Parse(FromClaim(DayaClaimTypes.UserType));
-    }
-
-    private string Name()
+    private string UserName()
     {
         try
         {
@@ -63,9 +58,13 @@ public class ContextAccessor : IContextAccessor
     }
 
     Guid IServiceContextAccessor.UserId => UserId();
-    string IServiceContextAccessor.FullName => Name();
-    string IContextAccessor.FirstName => FirstName();
-    string IContextAccessor.LastName => LastName();
-    string IContextAccessor.EmailAddress => EmailAddress();
-    int IContextAccessor.UserType => UserType();
+    string IServiceContextAccessor.UserName => UserName();
+
+    string IServiceContextAccessor.FirstName => FirstName();
+
+    string IServiceContextAccessor.LastName => LastName();
+
+    string IServiceContextAccessor.EmailAddress => EmailAddress();
+
+    public Guid UserObjectId => throw new NotImplementedException();
 }

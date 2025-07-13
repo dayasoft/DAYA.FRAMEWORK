@@ -1,6 +1,5 @@
 ﻿using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
 using Microsoft.Azure.Cosmos;
-using Container = Microsoft.Azure.Cosmos.Container;
 
 namespace DAYA.Cloud.Framework.V2.Cosmos;
 

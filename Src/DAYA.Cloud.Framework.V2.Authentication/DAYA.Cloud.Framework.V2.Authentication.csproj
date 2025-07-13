@@ -8,11 +8,14 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.5.0</Version>
-		<AssemblyVersion>8.5.0.0</AssemblyVersion>
-		<FileVersion>8.5.0.0</FileVersion>
+		<Version>8.5.3</Version>
+		<AssemblyVersion>8.5.3.0</AssemblyVersion>
+		<FileVersion>8.5.3.0</FileVersion>
 		<PackageReleaseNotes>
-			8.5.0 Support 
+			8.5.3 Update Azure packages
+			8.5.2 Enable Multiple Daya Authorization
+			8.5.1 Improve authentication provider
+			8.5.0 Support
 		</PackageReleaseNotes>
 	</PropertyGroup>
 

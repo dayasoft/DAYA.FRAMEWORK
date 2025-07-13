@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Daya.Sample.IntegrationEvents\Daya.Sample.IntegrationEvents.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UserAccounts\Notifications\" />
+  </ItemGroup>
+
 </Project>

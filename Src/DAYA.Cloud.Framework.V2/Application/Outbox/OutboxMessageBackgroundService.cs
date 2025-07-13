@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -16,12 +17,14 @@ namespace DAYA.Cloud.Framework.V2.Application.Outbox
         public OutboxMessageBackgroundService(
             ILogger<OutboxMessageBackgroundService> logger,
             ServiceBusClient serviceBusClient,
-            IOutboxMessageProcessor outboxMessageProcessor)
+            IOutboxMessageProcessor outboxMessageProcessor,
+            IConfiguration configuration)
         {
             _logger = logger;
             _outboxMessageProcessor = outboxMessageProcessor;
+            var serviceName = configuration.GetValue<string>("ServiceName").ToLower();
 
-            _serviceBusSessionProcessor = serviceBusClient.CreateSessionProcessor("outboxMessages", new ServiceBusSessionProcessorOptions
+            _serviceBusSessionProcessor = serviceBusClient.CreateSessionProcessor($"{serviceName}-outboxmessages", new ServiceBusSessionProcessorOptions
             {
                 AutoCompleteMessages = false,
                 MaxConcurrentSessions = 10, // Number of concurrent sessions to process

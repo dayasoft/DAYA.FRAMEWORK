@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
 {
-    public static class ServiceCollectionExtension
+    public static class DayaAuthenticationServiceCollectionExtension
     {
         public static void AddDayaAuthentication(
             this IServiceCollection services,
@@ -93,7 +93,7 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
                     .AddJwtBearer(DayaAuthenticationSchemeNames.EntraExternalId, options =>
                     {
                         // Entra External ID uses a specific authority format
-                        options.Authority = $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/{entraExternalIdConfig.SignUpSignInPolicyId}/v2.0";
+                        options.Authority = $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/v2.0";
                         options.MetadataAddress = $"https://{entraExternalIdConfig.EntraName}.ciamlogin.com/{entraExternalIdConfig.TenantId}/v2.0/.well-known/openid-configuration";
 
                         options.RequireHttpsMetadata = false;

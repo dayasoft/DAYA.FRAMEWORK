@@ -1,6 +1,6 @@
 ﻿namespace DAYA.Cloud.Framework.V2.MicrosoftGraph;
 
-internal class GraphParameterResolver : IGraphParameterResolver
+public class GraphParameterResolver : IGraphParameterResolver
 {
     private readonly string _issuer;
     private readonly string _extensionClientId;

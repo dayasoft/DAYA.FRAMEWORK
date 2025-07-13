@@ -2,12 +2,9 @@ using System.Reflection;
 using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using Daya.Sample.WebAPI.Configuration.Logging;
-using DAYA.Cloud.Framework.V2.Application.Contracts;
-using DAYA.Cloud.Framework.V2.Application.InternalCommands;
-using DAYA.Cloud.Framework.V2.Application.Outbox;
 using DAYA.Cloud.Framework.V2.Cosmos;
-using DAYA.Cloud.Framework.V2.Infrastructure;
 using DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
+using DAYA.Cloud.Framework.V2.MicrosoftGraph;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Azure;
 using Newtonsoft.Json;
@@ -28,19 +25,19 @@ builder.Configuration.AddEnvironmentVariables();
 
 var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
 {
-    TenantId = "55a6a626-be1a-4c04-b1ae-767bec31edd5",
+    TenantId = builder.Configuration.GetValue<string>("AzureServices:TenantId"),
     AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-    ManagedIdentityClientId = "9ff5b77c-be82-4967-94a1-8e752ed1b604",
+    ManagedIdentityClientId = builder.Configuration.GetValue<string>("AzureServices:ManagedIdentityClientId"),
 });
 
 builder.Services.AddAzureClients(
     clientBuilder =>
     {
         clientBuilder.UseCredential(credential);
-        clientBuilder.AddServiceBusClientWithNamespace("sb-passwordless-sdkui0.servicebus.windows.net");
+        //clientBuilder.AddServiceBusClientWithNamespace(builder.Configuration.GetValue<string>("ServiceBus:NameSpace"));
     }
 );
-
+builder.Services.AddSingleton(new ServiceBusClient("Endpoint=sb://apc-dev-servicebus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=BXl6Bw42hFohpKjN66i62BicNG9gB6vMg+ASbMGx04E="));
 builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
 {
     var jsonSerializerSetting = new JsonSerializerSettings
@@ -57,10 +54,8 @@ builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
         Serializer = new CosmosJsonDotNetSerializer(jsonSerializerSetting)
     };
 
-    return new CosmosClient("https://pj-dev-ms-cosmosdb.documents.azure.com:443/", "ZZJLGIEVqtAwyplILNpmurpox57yElsko0nDveBr4f7hwb2E6JRftnIZmJ8fmtdWrVtHJrxll0xjlmkccoBMZg==", cosmosClientOptions);
+    return new CosmosClient("https://localhost:8081", "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", cosmosClientOptions);
 });
-
-builder.Services.AddSingleton(new ServiceBusClient("sb-passwordless-sdkui0.servicebus.windows.net", credential));
 
 builder.Services.AddSingleton<Database>(sp =>
 {
@@ -83,17 +78,20 @@ builder.Services.AddScopeAccessors();
 var infrastructureAssembly = Assembly.Load("Daya.Sample.Infrastructure");
 var applicationAssembly = Assembly.Load("Daya.Sample.Application");
 
-builder.Services.AddSingleton<IServiceModule, ServiceModule>();
-
 // Add DAYA Framework processing services
-builder.Services.AddDayaMediator(infrastructureAssembly, applicationAssembly);
+builder.Services.AddDayaMediator(builder.Configuration, infrastructureAssembly, applicationAssembly);
 builder.Services.AddDayaAuthentication(builder.Configuration);
 builder.Services.AddDayaAuthorization();
 
-builder.Services.AddSingleton<IApplicationAssemblyResolver>(new ApplicationAssemblyResolver(applicationAssembly));
+builder.Services.AddSingleton<IGraphClientFactory>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var appId = configuration["EntraExternalGraph:ClientId"];
+    var tenantId = configuration["EntraExternalGraph:TenantId"];
+    var clientSecret = configuration["EntraExternalGraph:ClientSecret"];
+    return new GraphClientFactory(appId, tenantId, clientSecret);
+});
 
-builder.Services.AddHostedService<OutboxMessageBackgroundService>();
-builder.Services.AddHostedService<InternalCommandMessageBackgroundService>();
 builder.Services.AddControllers();
 
 builder.Services.AddSwaggerDocumentation();

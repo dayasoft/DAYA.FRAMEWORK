@@ -54,10 +54,6 @@ internal class AzureServiceBusEventBus : IEventBus
             ContentType = contentType
         };
 
-        _logger.LogInformation("Body: " + json);
-        _logger.LogInformation("MessageId: " + message.MessageId);
-        _logger.LogInformation("SessionId: " + message.SessionId);
-
         var sender = _topicClientFactory.CreateSender(@event.IntegrationEventName);
         await sender.SendMessageAsync(message);
     }
