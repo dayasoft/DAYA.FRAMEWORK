@@ -1,7 +1,7 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
-using Daya.Sample.WebAPI.Configuration.Logging;
+using Daya.Sample.API.Configuration.Logging;
 
-namespace Daya.Sample.WebAPI.Configuration.Logging
+namespace Daya.Sample.API.Configuration.Logging
 {
     public static class LoggingExtension
     {

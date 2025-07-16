@@ -3,7 +3,7 @@ using Daya.Sample.Domain.UserAccounts;
 using DAYA.Cloud.Framework.V2.Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Daya.Sample.WebAPI.Controllers.UserAccounts
+namespace Daya.Sample.API.Controllers.UserAccounts
 {
     [ApiController]
     [Route("api/platform/[controller]")]

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using DAYA.Cloud.Framework.V2.Domain;
 using Newtonsoft.Json;
 
 namespace DAYA.Cloud.Framework.V2.DirectOperations;
 
-public abstract class CosmosEntity
+public abstract class CosmosEntity : Entity
 {
     [JsonIgnore]
     public abstract TypedId Id { get; }
@@ -27,12 +26,4 @@ public abstract class CosmosEntity
     }
 
     protected abstract void Apply(IDomainEvent @event);
-
-    protected static async Task CheckRuleAsync(IBusinessRule rule)
-    {
-        if (await rule.IsBrokenAsync())
-        {
-            throw new BusinessRuleValidationException(rule);
-        }
-    }
 }

@@ -1,6 +1,6 @@
 ﻿using Daya.Sample.Application.Categories.Commands.Update;
 using Daya.Sample.Domain.Categories.Events;
-using Daya.Sample.IntegrationEvents;
+using Daya.Sample.IntegrationEvents.Categories;
 using DAYA.Cloud.Framework.V2.Application.Configuration.Commands;
 using DAYA.Cloud.Framework.V2.Application.Configuration.Notifications;
 using DAYA.Cloud.Framework.V2.Infrastructure.EventBus;

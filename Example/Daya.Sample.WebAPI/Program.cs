@@ -1,7 +1,7 @@
 using System.Reflection;
 using Azure.Identity;
 using Azure.Messaging.ServiceBus;
-using Daya.Sample.WebAPI.Configuration.Logging;
+using Daya.Sample.API.Configuration.Logging;
 using DAYA.Cloud.Framework.V2.Cosmos;
 using DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
 using DAYA.Cloud.Framework.V2.MicrosoftGraph;

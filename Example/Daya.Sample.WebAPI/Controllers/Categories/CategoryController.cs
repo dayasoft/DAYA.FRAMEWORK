@@ -1,12 +1,12 @@
+using Daya.Sample.API.Controllers.Categories.Requests;
 using Daya.Sample.Application.Categories.Commands.Create;
 using Daya.Sample.Application.Categories.Queries.Dto;
 using Daya.Sample.Application.Categories.Queries.GetCategories;
-using Daya.Sample.WebAPI.Controllers.Categories.Requests;
 using DAYA.Cloud.Framework.V2.Application.Contracts;
 using DAYA.Cloud.Framework.V2.Authentication.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Daya.Sample.WebAPI.Controllers.Categories
+namespace Daya.Sample.API.Controllers.Categories
 {
     [ApiController]
     [Route("[controller]")]

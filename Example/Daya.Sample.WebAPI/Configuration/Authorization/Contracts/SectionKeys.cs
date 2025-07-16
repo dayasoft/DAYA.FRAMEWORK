@@ -1,4 +1,4 @@
-namespace Daya.Sample.WebAPI.Configuration.Authorization.Contracts;
+namespace Daya.Sample.API.Configuration.Authorization.Contracts;
 
 public static class SectionKeys
 {

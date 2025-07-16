@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace DAYA.Cloud.Framework.V2.Infrastructure.Configuration.Processing.Outbox
+namespace DAYA.Cloud.Framework.V2.Infrastructure.Configuration.Processing.InternalCommands
 {
     public class InternalMessageProcessor : IInternalMessageProcessor
     {

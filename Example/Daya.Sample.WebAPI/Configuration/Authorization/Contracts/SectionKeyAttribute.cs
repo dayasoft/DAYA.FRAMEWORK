@@ -1,6 +1,6 @@
 using System;
 
-namespace Daya.Sample.WebAPI.Configuration.Authorization.Contracts;
+namespace Daya.Sample.API.Configuration.Authorization.Contracts;
 
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
 public class SectionKeyAttribute : Attribute
