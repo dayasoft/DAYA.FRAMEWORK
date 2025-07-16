@@ -1,3 +1,4 @@
+using Daya.Sample.Domain.UserAccounts.BusinessRules;
 using Daya.Sample.Domain.UserAccounts.DomainEvents;
 using DAYA.Cloud.Framework.V2.DirectOperations;
 using DAYA.Cloud.Framework.V2.DirectOperations.Attributes;
@@ -30,6 +31,9 @@ namespace Daya.Sample.Domain.UserAccounts
             string lastName,
             string emailAddress)
         {
+            var isUnique = true; // check if the user with the same email address is uniuqe
+            await CheckRuleAsync(new UserAccountShouldBeUniqueRule(isUnique));
+
             var @event = new UserAccountCreatedDomainEvent(
                 id,
                 tenantId,

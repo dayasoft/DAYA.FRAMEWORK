@@ -4,7 +4,7 @@ namespace DAYA.Cloud.Framework.V2.Domain;
 
 public abstract class Entity
 {
-    protected static async Task CheckRule(IBusinessRule rule)
+    protected static async Task CheckRuleAsync(IBusinessRule rule)
     {
         if (await rule.IsBrokenAsync())
         {

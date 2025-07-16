@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAYA.ArchRules", "Src\DAYA.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daya.Sample.Tests.ArchRules", "Example\Daya.Sample.ArchRuleTests\Daya.Sample.Tests.ArchRules.csproj", "{C949E236-0F3A-4B77-B530-B4F39CEF5E36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAYA.Cloud.CodeGenerator", "Src\DAYA.Cloud.CodeGenerator\DAYA.Cloud.CodeGenerator.csproj", "{300A91AD-4E0A-C655-8FEA-6367210AD9FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{C949E236-0F3A-4B77-B530-B4F39CEF5E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C949E236-0F3A-4B77-B530-B4F39CEF5E36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C949E236-0F3A-4B77-B530-B4F39CEF5E36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{8345D986-86A7-C8BC-0E3B-53B51D929756} = {82FBBDF0-CA4B-4A1C-B281-EEDBCE349929}
 		{4700C403-C802-A271-C924-00AF1A6D46FB} = {F48BF53B-55F8-4463-9B9D-3F8F94C5C10A}
 		{C949E236-0F3A-4B77-B530-B4F39CEF5E36} = {82FBBDF0-CA4B-4A1C-B281-EEDBCE349929}
+		{300A91AD-4E0A-C655-8FEA-6367210AD9FC} = {F48BF53B-55F8-4463-9B9D-3F8F94C5C10A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C870FA8-A0D0-4DD9-8B45-1BC1EB196F06}

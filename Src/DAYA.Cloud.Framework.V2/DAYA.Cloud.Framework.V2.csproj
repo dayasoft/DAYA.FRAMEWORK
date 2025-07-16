@@ -6,10 +6,11 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.5.6</Version>
-		<AssemblyVersion>8.5.6.0</AssemblyVersion>
-		<FileVersion>8.5.6.0</FileVersion>
+		<Version>8.5.7</Version>
+		<AssemblyVersion>8.5.7.0</AssemblyVersion>
+		<FileVersion>8.5.7.0</FileVersion>
 		<PackageReleaseNotes>
+			8.5.7 Fix business rule check name
 			8.5.6 Remove unused references and classes
 			8.5.5 Remove entityFramework references
 			8.5.4 Remove SymmetricEncryptionProvider reference
