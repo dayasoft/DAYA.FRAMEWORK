@@ -1,4 +1,5 @@
 ﻿using Daya.Sample.Application.Categories.Queries.Dto;
+using Daya.Sample.Domain.Commons;
 using DAYA.Cloud.Framework.V2.Application.Configuration.Queries;
 using DAYA.Cloud.Framework.V2.Application.Contracts;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;

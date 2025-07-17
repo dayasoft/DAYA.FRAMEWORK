@@ -83,7 +83,12 @@ public class Generator
     private static async Task CheckAndGenerateFileBuilder(List<string> updatedFiles, Type applicationRequest)
     {
         Console.WriteLine("Checking " + applicationRequest.Name + "...");
-        var aggregate = applicationRequest.FullName[(applicationRequest.FullName.IndexOf("Application.") + "Application.".Length)..];
+
+        var fullName = applicationRequest.FullName;
+        var search = "Application.";
+        var idx = fullName.IndexOf(search, StringComparison.OrdinalIgnoreCase);
+
+        var aggregate = fullName[(idx + search.Length)..];
         if (aggregate.IndexOf('.') < 0)
         {
             aggregate = "SeedWork";

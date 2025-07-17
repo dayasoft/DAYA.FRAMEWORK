@@ -1,4 +1,5 @@
-﻿using DAYA.Cloud.Framework.V2.Infrastructure.EventBus;
+﻿using Daya.Sample.Domain.Categories;
+using DAYA.Cloud.Framework.V2.Infrastructure.EventBus;
 
 namespace Daya.Sample.IntegrationEvents.Categories
 {

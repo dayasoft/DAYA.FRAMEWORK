@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\DAYA.Cloud.CodeGenerator\DAYA.Cloud.CodeGenerator.csproj" />
+    <ProjectReference Include="..\Daya.Sample.Application\Daya.Sample.Application.csproj" />
+    <ProjectReference Include="..\Daya.Sample.Domain\Daya.Sample.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

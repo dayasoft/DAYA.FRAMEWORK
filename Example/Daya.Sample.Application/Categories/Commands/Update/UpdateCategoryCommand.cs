@@ -1,4 +1,5 @@
-﻿using DAYA.Cloud.Framework.V2.DirectOperations;
+﻿using Daya.Sample.Domain.Categories;
+using DAYA.Cloud.Framework.V2.DirectOperations;
 
 namespace Daya.Sample.Application.Categories.Commands.Update
 {

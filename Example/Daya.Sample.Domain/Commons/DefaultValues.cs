@@ -1,5 +1,8 @@
-public static class DefaultValues
+namespace Daya.Sample.Domain.Commons
 {
-    public const string PlatformPartitionKey = "00000000-0000-0000-0000-100000000000";
-    public const string ServiceName = "dayaservice";
+    public static class DefaultValues
+    {
+        public const string PlatformPartitionKey = "00000000-0000-0000-0000-100000000000";
+        public const string ServiceName = "dayaservice";
+    }
 }

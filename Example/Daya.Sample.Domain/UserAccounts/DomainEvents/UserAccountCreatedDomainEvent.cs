@@ -1,3 +1,4 @@
+using Daya.Sample.Domain.Commons;
 using DAYA.Cloud.Framework.V2.Domain;
 
 namespace Daya.Sample.Domain.UserAccounts.DomainEvents

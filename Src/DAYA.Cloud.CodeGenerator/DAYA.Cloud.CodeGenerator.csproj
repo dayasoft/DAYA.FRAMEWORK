@@ -10,10 +10,11 @@
     <Authors>Daya Team</Authors>
     <Company>DayaSoft</Company>
     <Product>CodeGenerator</Product>
-    <Version>8.5.1</Version>
-    <AssemblyVersion>8.5.1.0</AssemblyVersion>
-    <FileVersion>8.5.1.0</FileVersion>
+    <Version>8.5.2</Version>
+    <AssemblyVersion>8.5.2.0</AssemblyVersion>
+    <FileVersion>8.5.2.0</FileVersion>
     <PackageReleaseNotes>
+		8.5.2 Fix the Application namespace finder
 		8.5.1 Fix finding the projet helper path
 		8.5.0 Integrate with new version
 	</PackageReleaseNotes>

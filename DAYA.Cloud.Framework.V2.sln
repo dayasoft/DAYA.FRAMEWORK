@@ -37,6 +37,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daya.Sample.Tests.ArchRules
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAYA.Cloud.CodeGenerator", "Src\DAYA.Cloud.CodeGenerator\DAYA.Cloud.CodeGenerator.csproj", "{300A91AD-4E0A-C655-8FEA-6367210AD9FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daya.Sample.CodeGenerator", "Example\Daya.Sample.CodeGenerator\Daya.Sample.CodeGenerator.csproj", "{C636A224-4754-4410-AAD1-24E347C6855A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daya.Sample.TestHelpers", "Example\Daya.Sample.TestHelpers\Daya.Sample.TestHelpers.csproj", "{F423CD94-1DCE-4FE4-8998-F4E858E01AA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +95,14 @@ Global
 		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{300A91AD-4E0A-C655-8FEA-6367210AD9FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C636A224-4754-4410-AAD1-24E347C6855A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C636A224-4754-4410-AAD1-24E347C6855A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C636A224-4754-4410-AAD1-24E347C6855A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C636A224-4754-4410-AAD1-24E347C6855A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F423CD94-1DCE-4FE4-8998-F4E858E01AA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F423CD94-1DCE-4FE4-8998-F4E858E01AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F423CD94-1DCE-4FE4-8998-F4E858E01AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F423CD94-1DCE-4FE4-8998-F4E858E01AA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +120,8 @@ Global
 		{4700C403-C802-A271-C924-00AF1A6D46FB} = {F48BF53B-55F8-4463-9B9D-3F8F94C5C10A}
 		{C949E236-0F3A-4B77-B530-B4F39CEF5E36} = {82FBBDF0-CA4B-4A1C-B281-EEDBCE349929}
 		{300A91AD-4E0A-C655-8FEA-6367210AD9FC} = {F48BF53B-55F8-4463-9B9D-3F8F94C5C10A}
+		{C636A224-4754-4410-AAD1-24E347C6855A} = {82FBBDF0-CA4B-4A1C-B281-EEDBCE349929}
+		{F423CD94-1DCE-4FE4-8998-F4E858E01AA2} = {82FBBDF0-CA4B-4A1C-B281-EEDBCE349929}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1C870FA8-A0D0-4DD9-8B45-1BC1EB196F06}
