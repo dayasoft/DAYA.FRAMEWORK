@@ -2,9 +2,9 @@ using System.Reflection;
 using Azure.Identity;
 using Daya.Sample.API.Configuration.Keyvault;
 using Daya.Sample.API.Configuration.Logging;
-using Daya.Sample.WebAPI.Configuration.CosmosDatabase;
+using Daya.Sample.Infrastructure.Configuration.CosmosDatabase;
+using Daya.Sample.Infrastructure.Configuration.ServiceBus;
 using Daya.Sample.WebAPI.Configuration.Scope;
-using Daya.Sample.WebAPI.Configuration.ServiceBus;
 using DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
 using DAYA.Cloud.Framework.V2.MicrosoftGraph;
 using Microsoft.Extensions.Azure;
@@ -100,6 +100,13 @@ void ConfigureAzureServices(WebApplicationBuilder builder)
     // Register Azure services
     builder.Services.AddServiceBus(builder.Configuration);
 
+    var databaseName = builder.Configuration.GetValue<string>("ServiceDatabaseConfig:DatabaseName");
+    var accountEndpoint = builder.Configuration.GetValue<string>("ServiceDatabaseConfig:AccountEndpoint");
+    var accountKey = builder.Configuration.GetValue<string>("ServiceDatabaseConfig:AccountKey");
+
     // Register Cosmos DB service
-    builder.Services.AddCosmosDb(builder.Configuration, credential);
+    builder.Services.AddCosmosDb(config =>
+    {
+        return new ServiceDatabaseConfig(accountEndpoint!, accountKey!, databaseName!);
+    }, null, credential);
 }

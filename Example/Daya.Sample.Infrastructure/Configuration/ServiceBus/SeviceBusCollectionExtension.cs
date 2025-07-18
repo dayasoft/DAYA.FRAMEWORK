@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Daya.Sample.Infrastructure.Configuration.ServiceBus
 {
-    internal static class SeviceBusCollectionExtension
+    public static class SeviceBusCollectionExtension
     {
         public static IServiceCollection AddServiceBus(this IServiceCollection services, IConfiguration configuration)
         {
