@@ -15,6 +15,8 @@ namespace Daya.Sample.CodeGenerator
             var applicationBuilders = await Generator.GenerateApplicationBuildersAsync(
                 typeof(Query<>),
                 typeof(IQuery<>),
+                typeof(Command<>),
+                typeof(Command),
                 typeof(DirectCommand),
                 typeof(DirectCommand<>)).ConfigureAwait(false);
             var domainBuilders = await Generator.GenerateDomainBuildersAsync().ConfigureAwait(false);

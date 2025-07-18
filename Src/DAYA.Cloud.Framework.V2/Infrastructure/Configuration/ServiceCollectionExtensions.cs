@@ -86,10 +86,13 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IApplicationAssemblyResolver>(new ApplicationAssemblyResolver(applicationAssembly));
 
-        // Register background services (outbox messages, internal messages)
+        return services;
+    }
+
+    public static IServiceCollection AddDayaHostedServices(this IServiceCollection services)
+    {
         services.AddHostedService<OutboxMessageBackgroundService>();
         services.AddHostedService<InternalCommandMessageBackgroundService>();
-
         return services;
     }
 

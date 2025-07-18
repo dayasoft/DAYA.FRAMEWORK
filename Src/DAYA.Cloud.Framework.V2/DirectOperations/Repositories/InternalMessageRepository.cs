@@ -11,7 +11,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
         public InternalMessageRepository(IContainerFactory containerFactory)
         {
-            _internalMessageContainer = containerFactory.Get("internalCommands");
+            _internalMessageContainer = containerFactory.Get("InternalCommands");
         }
 
         public async Task<InternalCommandMessage> CreateAsync(InternalCommandMessage message)

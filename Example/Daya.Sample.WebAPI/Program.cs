@@ -1,14 +1,13 @@
 using System.Reflection;
 using Azure.Identity;
-using Azure.Messaging.ServiceBus;
+using Daya.Sample.API.Configuration.Keyvault;
 using Daya.Sample.API.Configuration.Logging;
-using DAYA.Cloud.Framework.V2.Cosmos;
+using Daya.Sample.WebAPI.Configuration.CosmosDatabase;
+using Daya.Sample.WebAPI.Configuration.Scope;
+using Daya.Sample.WebAPI.Configuration.ServiceBus;
 using DAYA.Cloud.Framework.V2.Infrastructure.Configuration;
 using DAYA.Cloud.Framework.V2.MicrosoftGraph;
-using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Azure;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,56 +22,9 @@ if (environment.IsDevelopment())
 
 builder.Configuration.AddEnvironmentVariables();
 
-var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
-{
-    TenantId = builder.Configuration.GetValue<string>("AzureServices:TenantId"),
-    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-    ManagedIdentityClientId = builder.Configuration.GetValue<string>("AzureServices:ManagedIdentityClientId"),
-});
+ConfigureAzureServices(builder);
 
-builder.Services.AddAzureClients(
-    clientBuilder =>
-    {
-        clientBuilder.UseCredential(credential);
-        //clientBuilder.AddServiceBusClientWithNamespace(builder.Configuration.GetValue<string>("ServiceBus:NameSpace"));
-    }
-);
-builder.Services.AddSingleton(new ServiceBusClient("Endpoint=sb://apc-dev-servicebus.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=BXl6Bw42hFohpKjN66i62BicNG9gB6vMg+ASbMGx04E="));
-builder.Services.AddSingleton<CosmosClient>(serviceProvider =>
-{
-    var jsonSerializerSetting = new JsonSerializerSettings
-    {
-        ContractResolver = new PrivateSetterContractResolver
-        {
-            NamingStrategy = new CamelCaseNamingStrategy()
-        },
-        Formatting = Formatting.Indented
-    };
-
-    var cosmosClientOptions = new CosmosClientOptions
-    {
-        Serializer = new CosmosJsonDotNetSerializer(jsonSerializerSetting)
-    };
-
-    return new CosmosClient("https://localhost:8081", "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==", cosmosClientOptions);
-});
-
-builder.Services.AddSingleton<Database>(sp =>
-{
-    var configuration = sp.GetRequiredService<IConfiguration>();
-    var cosmosClient = sp.GetRequiredService<CosmosClient>();
-    var databaseName = configuration["CosmosDb:DatabaseName"] ?? "SampleDatabase";
-    var database = cosmosClient.GetDatabase(databaseName);
-
-    // Optionally, you can test the connection here synchronously, but ReadAsync is async. For now,
-    // just return the database instance.
-    return database;
-});
-
-// Add Logger
 builder.Services.AddLogging(builder.Environment);
-
-// Add Scope Accessor
 builder.Services.AddScopeAccessors();
 
 var infrastructureAssembly = Assembly.Load("Daya.Sample.Infrastructure");
@@ -80,6 +32,8 @@ var applicationAssembly = Assembly.Load("Daya.Sample.Application");
 
 // Add DAYA Framework processing services
 builder.Services.AddDayaMediator(builder.Configuration, infrastructureAssembly, applicationAssembly);
+builder.Services.AddDayaHostedServices();
+
 builder.Services.AddDayaAuthentication(builder.Configuration);
 builder.Services.AddDayaAuthorization();
 
@@ -112,3 +66,40 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void ConfigureAzureServices(WebApplicationBuilder builder)
+{
+    var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
+    {
+        TenantId = builder.Configuration.GetValue<string>("AzureServices:TenantId"),
+        AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+        ManagedIdentityClientId = builder.Configuration.GetValue<string>("AzureServices:ManagedIdentityClientId"),
+        ExcludeAzureCliCredential = !environment.IsDevelopment(),
+        ExcludeManagedIdentityCredential = environment.IsDevelopment()
+    });
+
+    // Configure Key Vault
+    var keyVaultUri = builder.Configuration["KeyVaultUri"];
+    if (!string.IsNullOrEmpty(keyVaultUri))
+    {
+        builder.Configuration.AddAzureKeyVault(
+            new Uri(keyVaultUri),
+            credential);
+    }
+
+    builder.Services.AddAzureClients(
+        clientBuilder =>
+        {
+            clientBuilder.UseCredential(credential);
+        }
+    );
+
+    // Register KeyVault service
+    builder.Services.AddSingleton<KeyVaultService>();
+
+    // Register Azure services
+    builder.Services.AddServiceBus(builder.Configuration);
+
+    // Register Cosmos DB service
+    builder.Services.AddCosmosDb(builder.Configuration, credential);
+}

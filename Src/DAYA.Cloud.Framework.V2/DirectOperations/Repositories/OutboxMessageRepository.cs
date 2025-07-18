@@ -11,7 +11,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
         public OutboxMessageRepository(IContainerFactory containerFactory)
         {
-            _outboxContainer = containerFactory.Get("outboxMessages");
+            _outboxContainer = containerFactory.Get("OutboxMessages");
         }
 
         public async Task<OutboxMessage> CreateAsync(OutboxMessage message)
