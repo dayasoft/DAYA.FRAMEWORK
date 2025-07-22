@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DAYA.Cloud.Framework.V2.Application.Outbox;
+using DAYA.Cloud.Framework.V2.Common.Constants;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
 using Microsoft.Azure.Cosmos;
 
@@ -11,7 +12,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
         public OutboxMessageRepository(IContainerFactory containerFactory)
         {
-            _outboxContainer = containerFactory.Get("OutboxMessages");
+            _outboxContainer = containerFactory.Get(ServiceDatabaseContainersBase.OutboxMessages);
         }
 
         public async Task<OutboxMessage> CreateAsync(OutboxMessage message)

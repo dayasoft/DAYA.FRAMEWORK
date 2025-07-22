@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using DAYA.Cloud.Framework.V2.Application.Outbox;
+using DAYA.Cloud.Framework.V2.Common.Constants;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
 using DAYA.Cloud.Framework.V2.Domain;
 using DAYA.Cloud.Framework.V2.Infrastructure.RetryPolicy;
@@ -25,7 +26,7 @@ internal class ProcessOutboxCommandHandler : IRequestHandler<ProcessOutboxComman
         PollyConfig pollyConfig,
         ILogger<ProcessOutboxCommandHandler> logger)
     {
-        _outboxContainer = containerFactory.Get("outboxMessages");
+        _outboxContainer = containerFactory.Get(ServiceDatabaseContainersBase.OutboxMessages);
         _assemblyResolver = assemblyResolver;
         _pollyConfig = pollyConfig;
         _logger = logger;
