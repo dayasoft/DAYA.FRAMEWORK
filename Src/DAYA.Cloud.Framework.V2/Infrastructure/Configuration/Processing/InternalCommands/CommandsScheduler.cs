@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using DAYA.Cloud.Framework.V2.Application.Configuration.Commands;
 using DAYA.Cloud.Framework.V2.Application.Contracts;
 using DAYA.Cloud.Framework.V2.Application.InternalCommands;
+using DAYA.Cloud.Framework.V2.Common.Constants;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
 using DAYA.Cloud.Framework.V2.DirectOperations.Contracts;
+using DAYA.Cloud.Framework.V2.Domain;
 using DAYA.Cloud.Framework.V2.Infrastructure.AzureServiceBus;
 using DAYA.Cloud.Framework.V2.Infrastructure.Serialization;
 using Microsoft.Azure.Cosmos;
@@ -27,7 +29,7 @@ internal class CommandsScheduler : ICommandsScheduler
         InternalCommandConfig internalCommandConfig)
     {
         _logger = logger;
-        _internalCommandContainer = containerFactory.Get("internalCommands");
+        _internalCommandContainer = containerFactory.Get(ServiceDatabaseContainersBase.InternalCommands);
         _queueMessagePublisher = queueMessagePublisher;
         _internalCommandConfig = internalCommandConfig;
     }

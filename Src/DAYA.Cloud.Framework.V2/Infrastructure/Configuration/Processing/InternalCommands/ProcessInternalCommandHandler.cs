@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DAYA.Cloud.Framework.V2.Application.Configuration.Commands;
 using DAYA.Cloud.Framework.V2.Application.InternalCommands;
+using DAYA.Cloud.Framework.V2.Common.Constants;
 using DAYA.Cloud.Framework.V2.Cosmos;
 using DAYA.Cloud.Framework.V2.Domain;
 using DAYA.Cloud.Framework.V2.Infrastructure.RetryPolicy;
@@ -26,7 +27,7 @@ internal class ProcessInternalCommandHandler : ICommandHandler<ProcessInternalCo
         PollyConfig pollyConfig,
         ILogger logger)
     {
-        _internalContainer = containerFactory.Get("internalCommands");
+        _internalContainer = containerFactory.Get(ServiceDatabaseContainersBase.InternalCommands);
         _assemblyResolver = assemblyResolver;
         _pollyConfig = pollyConfig;
         _logger = logger;

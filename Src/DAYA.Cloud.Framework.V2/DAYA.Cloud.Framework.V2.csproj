@@ -6,10 +6,11 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.5.8</Version>
-		<AssemblyVersion>8.5.8.0</AssemblyVersion>
-		<FileVersion>8.5.8.0</FileVersion>
+		<Version>8.5.9</Version>
+		<AssemblyVersion>8.5.9.0</AssemblyVersion>
+		<FileVersion>8.5.9.0</FileVersion>
 		<PackageReleaseNotes>
+      8.5.9 Fix InternalCommands and OutboxMessages Container Name
 			8.5.8 Update integration test
 			8.5.7 Fix business rule check name
 			8.5.6 Remove unused references and classes

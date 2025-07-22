@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
+
 using DAYA.Cloud.Framework.V2.Application.InternalCommands;
+using DAYA.Cloud.Framework.V2.Common.Constants;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
+
 using Microsoft.Azure.Cosmos;
 
 namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
@@ -11,7 +14,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
         public InternalMessageRepository(IContainerFactory containerFactory)
         {
-            _internalMessageContainer = containerFactory.Get("InternalCommands");
+            _internalMessageContainer = containerFactory.Get(ServiceDatabaseContainersBase.InternalCommands);
         }
 
         public async Task<InternalCommandMessage> CreateAsync(InternalCommandMessage message)
