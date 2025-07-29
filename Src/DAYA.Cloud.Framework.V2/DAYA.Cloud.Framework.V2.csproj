@@ -6,11 +6,12 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.5.9</Version>
-		<AssemblyVersion>8.5.9.0</AssemblyVersion>
-		<FileVersion>8.5.9.0</FileVersion>
+		<Version>8.5.10</Version>
+		<AssemblyVersion>8.5.10.0</AssemblyVersion>
+		<FileVersion>8.5.10.0</FileVersion>
 		<PackageReleaseNotes>
-      8.5.9 Fix InternalCommands and OutboxMessages Container Name
+			8.5.10 Update Azure packages
+			8.5.9 Fix InternalCommands and OutboxMessages Container Name
 			8.5.8 Update integration test
 			8.5.7 Fix business rule check name
 			8.5.6 Remove unused references and classes
@@ -33,7 +34,7 @@
 		<PackageReference Include="CacheQ" Version="1.0.5" />
 		<PackageReference Include="CacheQ.DependencyInjectionExtensions" Version="1.0.5" />
 		<PackageReference Include="FluentValidation" Version="12.0.0" />
-		<PackageReference Include="MediatR" Version="13.0.0" />
+		<PackageReference Include="MediatR" Version="12.5.0" />
 		<PackageReference Include="CompareNETObjects" Version="4.83.0" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
@@ -41,7 +42,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.7" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.7" />
 		<PackageReference Include="Polly" Version="8.6.2" />
-		<PackageReference Include="Microsoft.Graph" Version="5.85.0" />
+		<PackageReference Include="Microsoft.Graph" Version="5.87.0" />
 	</ItemGroup>
 
 	<ItemGroup>
