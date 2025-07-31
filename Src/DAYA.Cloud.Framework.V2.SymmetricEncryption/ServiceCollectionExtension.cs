@@ -15,7 +15,7 @@ public static class ServiceCollectionExtension
 
         services.AddSingleton(new SymmetricAlgorithmConfig(hexKey)
         {
-            CipherMode = CipherMode.ECB,
+            CipherMode = CipherMode.CBC, // Use CBC instead of insecure ECB
             PaddingMode = PaddingMode.PKCS7
         });
 

@@ -22,7 +22,10 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
         Task<IEnumerable<TAggregateRoot>> GetAllAsync(CancellationToken cancellationToken = default);
 
+        [Obsolete("Use QueryAsync with QueryDefinition to prevent SQL injection. This method will be removed in a future version.")]
         Task<IEnumerable<TAggregateRoot>> QueryAsync(string sqlQuery, CancellationToken cancellationToken = default);
+
+        Task<IEnumerable<TAggregateRoot>> QueryAsync(QueryDefinition queryDefinition, CancellationToken cancellationToken = default);
 
         Task AddAsync(TAggregateRoot entity, CancellationToken cancellationToken = default);
 

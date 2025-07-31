@@ -31,14 +31,9 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
 				{
 					apiKey = headerToken!;
 				}
-				else if (Request.Query.TryGetValue(DayaApiKeyAuthenticationOptions.TokenQueryParameterName, out var queryToken) == true
-						 && string.IsNullOrWhiteSpace(queryToken) == false)
-				{
-					apiKey = queryToken!;
-				}
 				else
 				{
-					var errorMessage = $"Missing header: {DayaApiKeyAuthenticationOptions.TokenHeaderName} or query parameter {DayaApiKeyAuthenticationOptions.TokenQueryParameterName}";
+					var errorMessage = $"Missing API key in header: {DayaApiKeyAuthenticationOptions.TokenHeaderName}. Query parameter authentication is disabled for security reasons.";
 					Logger.LogError("Api Key Authentication Failed. " + errorMessage);
 					return AuthenticateResult.Fail(errorMessage);
 				}

@@ -56,8 +56,42 @@ class SymmetricEncryption : ISymmetricEncryption
         symmetricAlgorithm.Mode = _symmetricAlgorithmConfig.CipherMode;
         symmetricAlgorithm.Padding = _symmetricAlgorithmConfig.PaddingMode;
 
-        ICryptoTransform cTransform = GetICryptoTransform(symmetricAlgorithm, cryptoType);
-        byte[] resultArray = cTransform.TransformFinalBlock(inputBuffer, 0, inputBuffer.Length);
+        byte[] resultArray;
+
+        if (cryptoType == CryptoType.Encrypt)
+        {
+            // For encryption, generate a random IV
+            symmetricAlgorithm.GenerateIV();
+            ICryptoTransform encryptor = symmetricAlgorithm.CreateEncryptor();
+            byte[] encryptedData = encryptor.TransformFinalBlock(inputBuffer, 0, inputBuffer.Length);
+            
+            // Prepend IV to encrypted data for storage/transmission
+            resultArray = new byte[symmetricAlgorithm.IV.Length + encryptedData.Length];
+            Buffer.BlockCopy(symmetricAlgorithm.IV, 0, resultArray, 0, symmetricAlgorithm.IV.Length);
+            Buffer.BlockCopy(encryptedData, 0, resultArray, symmetricAlgorithm.IV.Length, encryptedData.Length);
+        }
+        else
+        {
+            // For decryption, extract IV from the beginning of the data
+            int ivLength = symmetricAlgorithm.BlockSize / 8; // Block size is in bits, convert to bytes
+            if (inputBuffer.Length < ivLength)
+            {
+                throw new ArgumentException("Invalid encrypted data: insufficient length for IV");
+            }
+
+            // Extract IV
+            byte[] iv = new byte[ivLength];
+            Buffer.BlockCopy(inputBuffer, 0, iv, 0, ivLength);
+            symmetricAlgorithm.IV = iv;
+
+            // Extract encrypted data
+            byte[] encryptedData = new byte[inputBuffer.Length - ivLength];
+            Buffer.BlockCopy(inputBuffer, ivLength, encryptedData, 0, encryptedData.Length);
+
+            ICryptoTransform decryptor = symmetricAlgorithm.CreateDecryptor();
+            resultArray = decryptor.TransformFinalBlock(encryptedData, 0, encryptedData.Length);
+        }
+
         symmetricAlgorithm.Clear();
         return resultArray;
     }
@@ -67,8 +101,4 @@ class SymmetricEncryption : ISymmetricEncryption
         return _binaryToText.Decode(value);
     }
 
-    private static ICryptoTransform GetICryptoTransform(SymmetricAlgorithm symmetricAlgorithm, CryptoType cryptoType)
-    {
-        return cryptoType == CryptoType.Encrypt ? symmetricAlgorithm.CreateEncryptor() : symmetricAlgorithm.CreateDecryptor();
-    }
 }

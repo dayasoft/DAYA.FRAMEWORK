@@ -156,9 +156,33 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
             return results;
         }
 
+        [Obsolete("Use QueryAsync with parameters to prevent SQL injection. This method will be removed in a future version.")]
         public virtual async Task<IEnumerable<TAggregateRoot>> QueryAsync(string sqlQuery, CancellationToken cancellationToken = default)
         {
+            // Log warning about potential security risk
+            Console.WriteLine("WARNING: QueryAsync(string) is deprecated due to SQL injection risk. Use QueryAsync(QueryDefinition) instead.");
+            
             var query = _container.GetItemQueryIterator<TAggregateRoot>(new QueryDefinition(sqlQuery));
+
+            List<TAggregateRoot> results = new List<TAggregateRoot>();
+
+            while (query.HasMoreResults)
+            {
+                var response = await query.ReadNextAsync(cancellationToken: cancellationToken);
+                results.AddRange(response.ToList());
+            }
+
+            results.ForEach(Track);
+
+            return results;
+        }
+
+        public virtual async Task<IEnumerable<TAggregateRoot>> QueryAsync(QueryDefinition queryDefinition, CancellationToken cancellationToken = default)
+        {
+            if (queryDefinition == null)
+                throw new ArgumentNullException(nameof(queryDefinition));
+
+            var query = _container.GetItemQueryIterator<TAggregateRoot>(queryDefinition);
 
             List<TAggregateRoot> results = new List<TAggregateRoot>();
 
