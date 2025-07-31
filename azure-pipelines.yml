@@ -34,7 +34,7 @@ steps:
     packagesToPack: '**/DAYA.Cloud.Framework.V2.csproj'
     configuration: '$(buildConfiguration)'
     outputDir: '$(Build.ArtifactStagingDirectory)'
-    versioningScheme: 'byBuildNumber'
+    versioningScheme: 'off'
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack DAYA.Cloud.Framework.V2.Authentication'
@@ -43,7 +43,7 @@ steps:
     packagesToPack: '**/DAYA.Cloud.Framework.V2.Authentication.csproj'
     configuration: '$(buildConfiguration)'
     outputDir: '$(Build.ArtifactStagingDirectory)'
-    versioningScheme: 'byBuildNumber'
+    versioningScheme: 'off'
 
 - task: NuGetCommand@2
   displayName: 'Push to NuGet.org'
