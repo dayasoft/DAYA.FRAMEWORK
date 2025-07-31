@@ -4,6 +4,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
 - task: UseDotNet@2
   displayName: 'Use .NET SDK'
@@ -22,16 +25,25 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration Release --no-restore'
+    arguments: '--configuration $(buildConfiguration) --no-restore'
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Pack NuGet packages'
-#   inputs:
-#     command: 'pack'
-#     packagesToPack: '**/DAYA.Cloud.Framework.V2.csproj'
-#     configuration: 'Release'
-#     outputDir: '$(Build.ArtifactStagingDirectory)'
-#     versioningScheme: 'byBuildNumber'
+- task: DotNetCoreCLI@2
+  displayName: 'Pack DAYA.Cloud.Framework.V2'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/DAYA.Cloud.Framework.V2.csproj'
+    configuration: '$(buildConfiguration)'
+    outputDir: '$(Build.ArtifactStagingDirectory)'
+    versioningScheme: 'byBuildNumber'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Pack DAYA.Cloud.Framework.V2.Authentication'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/DAYA.Cloud.Framework.V2.Authentication.csproj'
+    configuration: '$(buildConfiguration)'
+    outputDir: '$(Build.ArtifactStagingDirectory)'
+    versioningScheme: 'byBuildNumber'
 
 - task: NuGetCommand@2
   displayName: 'Push to NuGet.org'

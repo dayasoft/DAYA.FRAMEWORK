@@ -72,13 +72,13 @@ namespace DAYA.Cloud.Framework.V2.Authentication.AuthenticationClient
 
             client.AddDefaultHeader(DayaAuthenticationClientOptions.ApiManagementSubscriptionKeyHeaderName, Options.AuthenticationClientConfig.SubscriptionKey);
 
-            if (Request.Headers.TryGetValue("Origin", out var origin))
+            if (Request.Headers.TryGetValue("Origin", out var origin) && !string.IsNullOrEmpty(origin))
             {
-                client.AddDefaultHeader("Origin", origin);
+                client.AddDefaultHeader("Origin", origin!);
             }
-            if (Request.Headers.TryGetValue("tenant-id", out var tenantId))
+            if (Request.Headers.TryGetValue("tenant-id", out var tenantId) && !string.IsNullOrEmpty(tenantId))
             {
-                client.AddDefaultHeader("tenant-id", tenantId);
+                client.AddDefaultHeader("tenant-id", tenantId!);
             }
 
             var restRequest = new RestRequest(Options.AuthenticationClientConfig.InternalAuthenticationUrl, Method.Post);

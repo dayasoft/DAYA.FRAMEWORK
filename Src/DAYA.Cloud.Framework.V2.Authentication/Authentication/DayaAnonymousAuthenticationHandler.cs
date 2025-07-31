@@ -12,8 +12,7 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
 		public DayaAnonymousAuthenticationHandler(
 			IOptionsMonitor<DayaAnonymousAuthenticationOptions> options,
 			ILoggerFactory logger,
-			UrlEncoder encoder,
-			ISystemClock clock) : base(options, logger, encoder, clock)
+			UrlEncoder encoder) : base(options, logger, encoder)
 		{
 		}
 

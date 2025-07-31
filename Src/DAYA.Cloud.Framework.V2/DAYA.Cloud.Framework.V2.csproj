@@ -6,10 +6,11 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.5.10</Version>
-		<AssemblyVersion>8.5.10.0</AssemblyVersion>
-		<FileVersion>8.5.10.0</FileVersion>
+		<Version>8.5.11</Version>
+		<AssemblyVersion>8.5.11.0</AssemblyVersion>
+		<FileVersion>8.5.11.0</FileVersion>
 		<PackageReleaseNotes>
+			8.5.11 Fix security issues
 			8.5.10 Update Azure packages
 			8.5.9 Fix InternalCommands and OutboxMessages Container Name
 			8.5.8 Update integration test

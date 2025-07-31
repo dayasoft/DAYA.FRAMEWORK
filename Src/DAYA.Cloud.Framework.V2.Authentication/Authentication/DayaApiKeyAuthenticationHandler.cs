@@ -15,8 +15,7 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
 			IOptionsMonitor<DayaApiKeyAuthenticationOptions> options,
 			ILoggerFactory logger,
 			UrlEncoder encoder,
-			ISystemClock clock,
-			IApiKeyStore apiKeyStore) : base(options, logger, encoder, clock)
+			IApiKeyStore apiKeyStore) : base(options, logger, encoder)
 		{
 			_apiKeyStore = apiKeyStore;
 		}

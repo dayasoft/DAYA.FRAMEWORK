@@ -4,12 +4,12 @@ namespace DAYA.Cloud.Framework.V2.Authentication.AuthenticationClient;
 
 internal class InternalPolicyRequirementHandler : AuthorizationHandler<InternalPolicyRequirement>
 {
-	protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, InternalPolicyRequirement requirement)
+	protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, InternalPolicyRequirement requirement)
 	{
 		if (context.User.Identity == null || context.User.Identity.IsAuthenticated == false)
 		{
 			context.Fail();
-			return;
+			return Task.CompletedTask;
 		}
 
 		if (bool.TryParse(context.User.Claims.FirstOrDefault(x => x.Type == "IsAuthorized")?.Value, out var isAuthorized) && isAuthorized)
@@ -20,5 +20,7 @@ internal class InternalPolicyRequirementHandler : AuthorizationHandler<InternalP
 		{
 			context.Fail();
 		}
+		
+		return Task.CompletedTask;
 	}
 }

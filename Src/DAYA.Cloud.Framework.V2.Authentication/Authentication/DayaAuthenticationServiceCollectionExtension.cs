@@ -55,7 +55,7 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
                             x.TokenValidationParameters = new TokenValidationParameters
                             {
                                 ValidateIssuerSigningKey = true,
-                                IssuerSigningKey = new SymmetricSecurityKey(FakeJwtTokenGenerator.EncryptionKey),
+                                IssuerSigningKey = new SymmetricSecurityKey(encryptionKey),
                                 ValidateIssuer = false,
                                 ValidateAudience = false
                             };
@@ -136,6 +136,7 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
             {
                 if (dayaCustomJwtConfig.UseFakeJwt)
                 {
+                    var encryptionKey = new Guid("11223344-5566-7788-99AA-BBCCDDEEFF00").ToByteArray();
                     services.AddAuthentication()
                             .AddJwtBearer(DayaAuthenticationSchemeNames.CustomJwt, x =>
                             {
@@ -144,7 +145,7 @@ namespace DAYA.Cloud.Framework.V2.Authentication.Authentication
                                 x.TokenValidationParameters = new TokenValidationParameters
                                 {
                                     ValidateIssuerSigningKey = true,
-                                    IssuerSigningKey = new SymmetricSecurityKey(FakeJwtTokenGenerator.EncryptionKey),
+                                    IssuerSigningKey = new SymmetricSecurityKey(encryptionKey),
                                     ValidateIssuer = false,
                                     ValidateAudience = false
                                 };
