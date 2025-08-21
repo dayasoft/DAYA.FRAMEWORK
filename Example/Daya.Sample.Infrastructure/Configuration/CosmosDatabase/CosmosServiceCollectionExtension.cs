@@ -39,7 +39,12 @@ namespace Daya.Sample.Infrastructure.Configuration.CosmosDatabase
                         NamingStrategy = new CamelCaseNamingStrategy()
                     },
                     Formatting = Formatting.Indented
-                })
+                }),
+                SerializerOptions = new CosmosSerializationOptions
+                {
+                    PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase,
+                    IgnoreNullValues = true
+                }
             };
 
             // Create client with either credential or account key

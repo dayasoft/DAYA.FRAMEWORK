@@ -47,6 +47,19 @@ namespace Daya.Sample.IntegrationTests.Tests.Categories
 
             // Verify the result
             Assert.NotNull(categoryList);
+
+            // update category
+            var updateCategoryCommand = new UpdateCategoryCommandBuilder()
+                .SetCategoryId(categoryId)
+                .SetName("Updated Category")
+                .Build();
+            await _serviceModule.ExecuteCommandAsync(updateCategoryCommand);
+
+            // get updated category
+            var updatedCategory = await _serviceModule.ExecuteQueryAsync(getCategoriesQuery);
+
+            // Verify the updated category
+            Assert.NotNull(updatedCategory);
         }
     }
 }

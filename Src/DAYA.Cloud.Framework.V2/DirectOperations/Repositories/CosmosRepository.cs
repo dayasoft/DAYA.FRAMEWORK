@@ -45,7 +45,12 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
                 MaxItemCount = 1
             };
 
-            var iterator = _container.GetItemLinqQueryable<TAggregateRoot>(true, null, requestOptions)
+            var linqOption = new CosmosLinqSerializerOptions
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+            };
+
+            var iterator = _container.GetItemLinqQueryable<TAggregateRoot>(true, null, requestOptions, linqOption)
                         .Where(predicate)
                         .Take(1)
                         .ToFeedIterator();
@@ -68,7 +73,12 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
                 PartitionKey = PartitionKeyHelper.GetPartitionKey(partitionKeyValues)
             };
 
-            var iterator = _container.GetItemLinqQueryable<TAggregateRoot>(requestOptions: requestOptions)
+            var linqOption = new CosmosLinqSerializerOptions
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+            };
+
+            var iterator = _container.GetItemLinqQueryable<TAggregateRoot>(requestOptions: requestOptions, linqSerializerOptions: linqOption)
                         .Where(predicate)
                         .ToFeedIterator();
 
@@ -109,7 +119,12 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
                 PartitionKey = new PartitionKey(partitionKey)
             };
 
-            var queryable = _container.GetItemLinqQueryable<TAggregateRoot>(allowSynchronousQueryExecution: true, requestOptions: requestOptions);
+            var linqOption = new CosmosLinqSerializerOptions
+            {
+                PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+            };
+
+            var queryable = _container.GetItemLinqQueryable<TAggregateRoot>(allowSynchronousQueryExecution: true, requestOptions: requestOptions, linqSerializerOptions: linqOption);
 
             // Query to get all records
             var countQuery = await queryable
@@ -161,7 +176,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
         {
             // Log warning about potential security risk
             Console.WriteLine("WARNING: QueryAsync(string) is deprecated due to SQL injection risk. Use QueryAsync(QueryDefinition) instead.");
-            
+
             var query = _container.GetItemQueryIterator<TAggregateRoot>(new QueryDefinition(sqlQuery));
 
             List<TAggregateRoot> results = new List<TAggregateRoot>();
