@@ -10,6 +10,9 @@ public abstract class CosmosEntity : Entity
     [JsonIgnore]
     public abstract TypedId Id { get; }
 
+    [JsonProperty("_etag")]
+    public string ETag { get; set; }
+
     [JsonIgnore]
     private readonly List<IDomainEvent> _domainEvents = new();
 

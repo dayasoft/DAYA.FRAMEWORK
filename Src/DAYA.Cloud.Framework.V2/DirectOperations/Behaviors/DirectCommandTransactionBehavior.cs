@@ -20,7 +20,7 @@ internal class DirectCommandTransactionBehavior<T, TResult> : IPipelineBehavior<
 
     public async Task<TResult> Handle(T request, RequestHandlerDelegate<TResult> next, CancellationToken cancellationToken)
     {
-        var result = await next();
+        var result = await next(cancellationToken);
 
         var changedEntities = _cosmosEntityChangeTracker.GetTrackedEntities();
 

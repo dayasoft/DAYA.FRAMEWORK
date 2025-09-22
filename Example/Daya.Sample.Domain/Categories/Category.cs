@@ -15,6 +15,7 @@ namespace Daya.Sample.Domain.Categories
         public string PartitionKey { get; private set; } = null!;
         public string Name { get; private set; } = null!;
         public string? Description { get; private set; }
+        public List<CategoryTag> Tags { get; private set; } = new();
 
         [JsonConstructor]
         private Category(CategoryId id)
@@ -42,11 +43,12 @@ namespace Daya.Sample.Domain.Categories
             return await Task.FromResult(category);
         }
 
-        public void Update(string name)
+        public void Update(string name, CategoryTag tag)
         {
             var @event = new CategoryUpdatedDomainEvent(
                 Id,
-                name);
+                name,
+                tag);
 
             ApplyEvent(@event);
             AddDomainEvent(@event);
@@ -67,6 +69,7 @@ namespace Daya.Sample.Domain.Categories
         private void ApplyEvent(CategoryUpdatedDomainEvent @event)
         {
             Name = @event.Name;
+            Tags.Add(@event.Tag);
         }
     }
 }

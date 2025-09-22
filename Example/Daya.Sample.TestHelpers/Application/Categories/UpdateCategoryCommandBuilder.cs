@@ -14,13 +14,16 @@ namespace Daya.Sample.TestHelpers.Application.Categories
         private bool _NameIsSet = false;
         private string _Description = Guid.NewGuid().ToString().Substring(0, 18);
         private bool _DescriptionIsSet = false;
+        private CategoryTag _Tag = new CategoryTagBuilder().Build();
+        private bool _TagIsSet = false;
 
         public UpdateCategoryCommand Build()
         {
             return new UpdateCategoryCommand(
                 new CategoryId(_CategoryId),
                 _Name,
-                _Description);
+                _Description,
+                _Tag);
         }
 
         public UpdateCategoryCommandBuilder SetCategoryId(Guid CategoryId)
@@ -53,6 +56,17 @@ namespace Daya.Sample.TestHelpers.Application.Categories
             }
             _DescriptionIsSet = true;
             _Description = Description;
+            return this;
+        }
+
+        public UpdateCategoryCommandBuilder SetTag(CategoryTag Tag)
+        {
+            if (_TagIsSet)
+            {
+                throw new System.InvalidOperationException(nameof(_Tag) + " already initialized");
+            }
+            _TagIsSet = true;
+            _Tag = Tag;
             return this;
         }
     }

@@ -101,6 +101,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
                 if (response.Resource is not null)
                 {
+                    response.Resource.ETag = response.ETag;
                     Track(response.Resource);
                 }
 
@@ -145,6 +146,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
                 if (response.Resource is not null)
                 {
+                    response.Resource.ETag = response.ETag;
                     Track(response.Resource);
                 }
 
@@ -222,7 +224,20 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
         public virtual async Task UpdateAsync(TTypedId id, TAggregateRoot entity, CancellationToken cancellationToken = default)
         {
             var transaction = GetOrCreateTransactionalBatch(PartitionKeyHelper.GetPartitionKey(entity));
-            transaction.UpsertItem(entity);
+            
+            if (!string.IsNullOrEmpty(entity.ETag))
+            {
+                var itemRequestOptions = new TransactionalBatchItemRequestOptions
+                {
+                    IfMatchEtag = entity.ETag
+                };
+                transaction.UpsertItem(entity, itemRequestOptions);
+            }
+            else
+            {
+                transaction.UpsertItem(entity);
+            }
+            
             Track(entity);
         }
 
@@ -239,7 +254,20 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
         public virtual async Task ReplaceAsync(TTypedId id, TAggregateRoot entity, CancellationToken cancellationToken = default)
         {
             var transaction = GetOrCreateTransactionalBatch(PartitionKeyHelper.GetPartitionKey(entity));
-            transaction.ReplaceItem(id.ToString(), entity);
+            
+            if (!string.IsNullOrEmpty(entity.ETag))
+            {
+                var itemRequestOptions = new TransactionalBatchItemRequestOptions
+                {
+                    IfMatchEtag = entity.ETag
+                };
+                transaction.ReplaceItem(id.ToString(), entity, itemRequestOptions);
+            }
+            else
+            {
+                transaction.ReplaceItem(id.ToString(), entity);
+            }
+            
             Track(entity);
         }
 

@@ -17,7 +17,7 @@ namespace Daya.Sample.Application.Categories.Commands.Update
         public async Task Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
         {
             var category = await EnsureCategory(request.CategoryId, cancellationToken);
-            category.Update(request.Name);
+            category.Update(request.Name, request.Tag);
 
             await _cateogryRepository.UpdateAsync(category.Id, category, cancellationToken);
         }

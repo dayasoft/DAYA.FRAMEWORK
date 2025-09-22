@@ -30,7 +30,7 @@ internal class DirectCommandLoggingBehavior<T, TResult> : IPipelineBehavior<T, T
             JsonConvert.SerializeObject(request, Formatting.Indented));
         try
         {
-            TResult result = await next();
+            TResult result = await next(cancellationToken);
             if (typeof(TResult) != typeof(Unit))
             {
                 _logger.LogInformation("Result: {environment}{result}",

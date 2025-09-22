@@ -37,6 +37,7 @@ namespace Daya.Sample.IntegrationTests.SeedWork
 
         internal Guid TenantId => FakeAccessor.Instance.TenantId.Value;
         internal Guid UserId => FakeAccessor.Instance.UserId;
+        public IServiceProvider ServiceProvider => _serviceProvider;
 
         public TestFixture()
         {

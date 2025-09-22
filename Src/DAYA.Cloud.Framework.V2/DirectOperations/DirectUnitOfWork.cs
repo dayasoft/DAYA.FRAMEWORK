@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
+using DAYA.Cloud.Framework.V2.DirectOperations.Configuration;
 using DAYA.Cloud.Framework.V2.DirectOperations.Contracts;
+using DAYA.Cloud.Framework.V2.DirectOperations.Exceptions;
 using DAYA.Cloud.Framework.V2.DirectOperations.Helpers;
 using DAYA.Cloud.Framework.V2.DirectOperations.Repositories;
 using DAYA.Cloud.Framework.V2.Infrastructure.AzureServiceBus;
@@ -24,8 +26,11 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
     private readonly IServiceProvider _serviceProvider;
     private readonly IOutboxMessageRepository _outboxRepository;
     private readonly IApplicationAssemblyResolver _assemblyResolver;
+    private readonly ConcurrencyRetryConfig _retryConfig;
 
-    private bool _commited; public DirectUnitOfWork(
+    private bool _committed;
+
+    public DirectUnitOfWork(
         IQueueMessagePublisher messagePublisher,
         OutboxConfig outboxConfig,
         ILogger<DirectUnitOfWork> logger,
@@ -33,7 +38,8 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
         IServiceProvider serviceProvider,
         IOutboxMessageRepository outboxRepository,
         IContainerFactory containerFactory,
-        IApplicationAssemblyResolver assemblyResolver)
+        IApplicationAssemblyResolver assemblyResolver,
+        ConcurrencyRetryConfig retryConfig = null)
     {
         _messagePublisher = messagePublisher;
         _outboxConfig = outboxConfig;
@@ -43,29 +49,49 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
         _serviceProvider = serviceProvider;
         _outboxRepository = outboxRepository;
         _assemblyResolver = assemblyResolver;
+        _retryConfig = retryConfig ?? new ConcurrencyRetryConfig();
     }
 
     public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
-        if (_commited)
+        if (_committed)
         {
-            throw new Exception("UoW can not be commited twice within a scope");
+            throw new Exception("UoW can not be committed twice within a scope");
         }
 
         var outboxMessageReferences = await DispatchDomainEventsAsync();
-        await CommitDataChanges(cancellationToken);
+        await CommitDataChangesAsync(cancellationToken);
 
         // send outbox messages (domain notification events) to outbox queue
         await PublishOutboxMessages(outboxMessageReferences);
     }
 
-    private async Task CommitDataChanges(CancellationToken cancellationToken)
+    private async Task CommitDataChangesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await CommitTransactionAsync(cancellationToken);
+            return; // Success - exit retry loop
+        }
+        catch (ConcurrencyException ex)
+        {
+            _logger.LogWarning($"Concurrency conflict detected. Refreshing entities and retrying. Error: {ex.Message}");
+
+            // Clear current transactions to start fresh
+            ClearAllTransactions();
+
+            // All retries exhausted
+            throw new ConcurrencyException($"Failed to commit after 2 retries due to concurrency conflicts. This typically indicates high contention on the same document.");
+        }
+    }
+
+    private async Task CommitTransactionAsync(CancellationToken cancellationToken)
     {
         var trackedEntities = _cosmosEntityChangeTracker.GetTrackedEntities();
 
         if (trackedEntities is { Count: > 0 })
         {
-            _logger.LogInformation("Start Commiting changes");
+            _logger.LogInformation("Start Committing changes");
 
             foreach (var changedEntity in trackedEntities)
             {
@@ -79,6 +105,11 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
                         var batchResponse = await transaction.Value.ExecuteAsync(cancellationToken);
                         if (!batchResponse.IsSuccessStatusCode)
                         {
+                            if (batchResponse.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                            {
+                                throw new ConcurrencyException($"Concurrency conflict detected. The document has been modified by another process. StatusCode: {batchResponse.StatusCode}");
+                            }
+
                             throw new Exception($"Transaction failed with status code {batchResponse.StatusCode}");
                         }
 
@@ -87,10 +118,10 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
                 }
             }
 
-            _logger.LogInformation($"Changes has been commited in database");
+            _logger.LogInformation($"Changes has been committed in database");
         }
 
-        _commited = true;
+        _committed = true;
     }
 
     private async Task PublishOutboxMessages(IEnumerable<OutboxMessageReference> outboxMessages)
@@ -125,7 +156,7 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
             return new List<OutboxMessageReference>();
         }
 
-        var outboxMessageRefrences = new List<OutboxMessageReference>();
+        var outboxMessageReferences = new List<OutboxMessageReference>();
 
         foreach (var domainEvent in domainEvents)
         {
@@ -141,7 +172,7 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
 
                 // Store the full message in outbox container (DB)
                 await _outboxRepository.CreateAsync(outboxMessage);
-                outboxMessageRefrences.Add(outboxMessageReference);
+                outboxMessageReferences.Add(outboxMessageReference);
 
                 _logger.LogInformation($"Successfully stored domain event {domainEvent.GetType().Name} in outbox");
             }
@@ -152,6 +183,38 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
             }
         }
 
-        return outboxMessageRefrences;
+        return outboxMessageReferences;
+    }
+
+    private void ClearAllTransactions()
+    {
+        var trackedEntities = _cosmosEntityChangeTracker.GetTrackedEntities();
+
+        foreach (var entity in trackedEntities)
+        {
+            var repositoryType = typeof(ICosmosRepository<,>).MakeGenericType(entity.GetType(), entity.Id.GetType());
+            if (_serviceProvider.GetService(repositoryType) is ICosmosRepository repository)
+            {
+                repository.TransactionalBatches.Clear();
+            }
+        }
+    }
+
+    private int CalculateDelay(int attempt, Random random)
+    {
+        // Exponential backoff: baseDelay * (2 ^ attempt)
+        var exponentialDelay = _retryConfig.BaseDelayMs * (int)Math.Pow(2, attempt - 1);
+
+        // Cap at maximum delay
+        exponentialDelay = Math.Min(exponentialDelay, _retryConfig.MaxDelayMs);
+
+        // Add jitter to prevent thundering herd
+        if (_retryConfig.EnableJitter)
+        {
+            var jitter = random.Next(0, exponentialDelay / 4); // Up to 25% jitter
+            exponentialDelay += jitter;
+        }
+
+        return exponentialDelay;
     }
 }

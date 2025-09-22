@@ -9,6 +9,7 @@ using DAYA.Cloud.Framework.V2.Cosmos;
 using DAYA.Cloud.Framework.V2.Cosmos.Abstractions;
 using DAYA.Cloud.Framework.V2.DirectOperations;
 using DAYA.Cloud.Framework.V2.DirectOperations.Behaviors;
+using DAYA.Cloud.Framework.V2.DirectOperations.Configuration;
 using DAYA.Cloud.Framework.V2.DirectOperations.Contracts;
 using DAYA.Cloud.Framework.V2.DirectOperations.Repositories;
 using DAYA.Cloud.Framework.V2.Infrastructure.AzureServiceBus;
@@ -55,6 +56,11 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<ICommandsScheduler, CommandsScheduler>();
         services.AddSingleton<IContainerFactory, ContainerFactory>();
+        // Configure concurrency retry policy
+        var retryConfig = new ConcurrencyRetryConfig();
+        configuration.GetSection("ConcurrencyRetry").Bind(retryConfig);
+        services.AddSingleton(retryConfig);
+
         services.AddScoped<IDirectUnitOfWork, DirectUnitOfWork>();
 
         var serviceName = configuration.GetValue<string>("ServiceName") ?? "DayaService";

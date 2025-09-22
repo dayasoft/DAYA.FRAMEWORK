@@ -20,12 +20,6 @@ namespace Daya.Sample.Application.Categories.Notifications.Created
 
         public async Task Handle(CategoryCreatedDomainEvent domainEvent, CancellationToken cancellationToken)
         {
-            await _commandsScheduler.EnqueueAsync(
-                new UpdateCategoryCommand(
-                    domainEvent.CategoryId,
-                    "Updated Name",
-                    "Updated Description"));
-
             await _eventBus.Publish(new CategorycreatedIntegrationEvent(
                     domainEvent.CategoryId,
                     domainEvent.Name));

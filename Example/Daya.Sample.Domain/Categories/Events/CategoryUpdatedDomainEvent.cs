@@ -4,5 +4,6 @@ namespace Daya.Sample.Domain.Categories.Events
 {
     public record CategoryUpdatedDomainEvent(
         CategoryId CategoryId,
-        string Name) : DomainEventBase(CategoryId);
+        string Name,
+        CategoryTag Tag) : DomainEventBase(CategoryId);
 }
