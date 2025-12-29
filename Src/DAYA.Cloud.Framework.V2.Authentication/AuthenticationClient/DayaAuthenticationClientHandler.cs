@@ -76,9 +76,10 @@ namespace DAYA.Cloud.Framework.V2.Authentication.AuthenticationClient
             {
                 client.AddDefaultHeader("Origin", origin!);
             }
-            if (Request.Headers.TryGetValue("tenant-id", out var tenantId) && !string.IsNullOrEmpty(tenantId))
+
+            if (Request.Headers.TryGetValue("tenantId", out var tenantId) && !string.IsNullOrEmpty(tenantId))
             {
-                client.AddDefaultHeader("tenant-id", tenantId!);
+                client.AddDefaultHeader("tenantId", tenantId!);
             }
 
             var restRequest = new RestRequest(Options.AuthenticationClientConfig.InternalAuthenticationUrl, Method.Post);

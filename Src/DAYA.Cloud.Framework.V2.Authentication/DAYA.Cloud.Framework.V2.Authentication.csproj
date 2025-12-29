@@ -8,11 +8,12 @@
 		<Company>DAYA SOFT GmbH</Company>
 		<Authors>DAYA SOFT TEAM</Authors>
 		<Copyright>DAYA SOFT GmbH</Copyright>
-		<Version>8.5.4</Version>
-		<AssemblyVersion>8.5.4.0</AssemblyVersion>
-		<FileVersion>8.5.4.0</FileVersion>
+		<Version>8.6.0</Version>
+		<AssemblyVersion>8.6.0.0</AssemblyVersion>
+		<FileVersion>8.6.0.0</FileVersion>
 		<PackageReleaseNotes>
-		 	8.5.4 Fix security issues
+			8.6.0 Add tenantId to the authorization header for multi-tenant support
+			8.5.4 Fix security issues
 			8.5.3 Update Azure packages
 			8.5.2 Enable Multiple Daya Authorization
 			8.5.1 Improve authentication provider
