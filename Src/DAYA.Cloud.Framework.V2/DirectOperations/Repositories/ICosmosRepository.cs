@@ -40,6 +40,6 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
     public interface ICosmosRepository
     {
-        Dictionary<PartitionKey, TransactionalBatch> TransactionalBatches { get; }
+        Dictionary<PartitionKey, TransactionalBatchCollection> TransactionalBatches { get; }
     }
 }

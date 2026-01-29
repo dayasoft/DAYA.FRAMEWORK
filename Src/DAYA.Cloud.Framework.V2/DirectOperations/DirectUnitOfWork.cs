@@ -102,15 +102,18 @@ internal partial class DirectUnitOfWork : IDirectUnitOfWork
                     var transactions = repository.TransactionalBatches;
                     foreach (var transaction in transactions)
                     {
-                        var batchResponse = await transaction.Value.ExecuteAsync(cancellationToken);
-                        if (!batchResponse.IsSuccessStatusCode)
+                        foreach (var batch in transaction.Value.Batches)
                         {
-                            if (batchResponse.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                            var batchResponse = await batch.ExecuteAsync(cancellationToken);
+                            if (!batchResponse.IsSuccessStatusCode)
                             {
-                                throw new ConcurrencyException($"Concurrency conflict detected. The document has been modified by another process. StatusCode: {batchResponse.StatusCode}");
-                            }
+                                if (batchResponse.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                                {
+                                    throw new ConcurrencyException($"Concurrency conflict detected. The document has been modified by another process. StatusCode: {batchResponse.StatusCode}");
+                                }
 
-                            throw new Exception($"Transaction failed with status code {batchResponse.StatusCode}");
+                                throw new Exception($"Transaction failed with status code {batchResponse.StatusCode}");
+                            }
                         }
 
                         repository.TransactionalBatches.Remove(transaction.Key);

@@ -22,7 +22,7 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
         private readonly string _containerName;
 
         private readonly ICosmosEntityChangeTracker _cosmosEntityChangeTracker;
-        public Dictionary<PartitionKey, TransactionalBatch> TransactionalBatches { get; } = new();
+        public Dictionary<PartitionKey, TransactionalBatchCollection> TransactionalBatches { get; } = new();
 
         public CosmosRepository(IContainerFactory containerFactory, ICosmosEntityChangeTracker cosmosEntityChangeTracker)
         {
@@ -273,18 +273,16 @@ namespace DAYA.Cloud.Framework.V2.DirectOperations.Repositories
 
         public virtual TransactionalBatch GetOrCreateTransactionalBatch(PartitionKey partitionKey)
         {
-            if (TransactionalBatches.TryGetValue(partitionKey, out var transactionalBatch))
+            if (!TransactionalBatches.TryGetValue(partitionKey, out var batchCollection))
             {
-                return transactionalBatch;
+                batchCollection = new TransactionalBatchCollection(_container, partitionKey);
+                if (!TransactionalBatches.TryAdd(partitionKey, batchCollection))
+                {
+                    throw new Exception("Can not create transactional batch.");
+                }
             }
 
-            transactionalBatch = _container.CreateTransactionalBatch(partitionKey);
-            if (TransactionalBatches.TryAdd(partitionKey, transactionalBatch))
-            {
-                return transactionalBatch;
-            }
-
-            throw new Exception("Can not create transactional batch.");
+            return batchCollection.GetCurrentBatch();
         }
 
         private void Track(TAggregateRoot entity)
